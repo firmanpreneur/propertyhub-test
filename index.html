@@ -45,7 +45,7 @@
   </div>
 
   <div class="grid" id="propertyGrid">
-    <!-- Data properti dari spreadsheet akan muncul di sini -->
+    <!-- Data properti dari CSV akan muncul di sini -->
   </div>
 
   <!-- Modal Detail -->
@@ -65,20 +65,19 @@
   </div>
 
   <script>
-    // Ganti link ini dengan link CSV dari Publish to Web spreadsheet kamu
-    const spreadsheetCSV = "web_property_Sheet1.csv";
-
+    // Ganti URL CSV ini dengan link CSV di GitHub kamu
+    const csvUrl = "web_property_Sheet1.csv";
     let properties = [];
 
     // Ambil CSV lalu parse
-    fetch(spreadsheetCSV)
+    fetch(csvUrl)
       .then(res => res.text())
       .then(csv => {
         const rows = csv.split("\n").map(r => r.split(","));
         const headers = rows[0].map(h => h.trim().toLowerCase());
         properties = rows.slice(1).map(row => {
           let obj = {};
-          row.forEach((val, i) => obj[headers[i]] = val);
+          row.forEach((val, i) => obj[headers[i]] = val.trim());
           return obj;
         });
         displayProperties(properties);
@@ -92,10 +91,10 @@
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
-          <h3>${p.title}</h3>
-          <p><strong>Lokasi:</strong> ${p.location}</p>
-          <p><strong>Harga:</strong> ${p.price}</p>
-          <p><strong>Tipe:</strong> ${p.type}</p>
+          <h3>${p["judul"]}</h3>
+          <p><strong>Lokasi:</strong> ${p["lokasi"]}</p>
+          <p><strong>Harga:</strong> ${p["harga"]}</p>
+          <p><strong>Tipe:</strong> ${p["tipe"]}</p>
           <button class="btn" onclick='openModal(${JSON.stringify(p)})'>Detail</button>
         `;
         grid.appendChild(card);
@@ -113,9 +112,9 @@
       let search = document.getElementById("searchBox").value.toLowerCase();
 
       let filtered = properties.filter(p =>
-        (city === "" || p.city?.toLowerCase() === city) &&
-        (type === "" || p.type?.toLowerCase() === type) &&
-        (search === "" || p.title?.toLowerCase().includes(search))
+        (city === "" || p["kota"]?.toLowerCase() === city) &&
+        (type === "" || p["tipe"]?.toLowerCase() === type) &&
+        (search === "" || p["judul"]?.toLowerCase().includes(search))
       );
 
       displayProperties(filtered);
@@ -123,17 +122,18 @@
 
     // Modal
     function openModal(p) {
-      document.getElementById("modalTitle").innerText = p.title;
-      document.getElementById("modalLocation").innerText = p.location;
-      document.getElementById("modalPrice").innerText = p.price;
-      document.getElementById("modalType").innerText = p.type;
-      document.getElementById("modalBedrooms").innerText = p.bedrooms;
-      document.getElementById("modalBathrooms").innerText = p.bathrooms;
-      document.getElementById("modalArea").innerText = p.area;
-      document.getElementById("modalStatus").innerText = p.status;
-      document.getElementById("modalDescription").innerText = p.description;
+      document.getElementById("modalTitle").innerText = p["judul"];
+      document.getElementById("modalLocation").innerText = p["lokasi"];
+      document.getElementById("modalPrice").innerText = p["harga"];
+      document.getElementById("modalType").innerText = p["tipe"];
+      document.getElementById("modalBedrooms").innerText = p["kamar tidur"];
+      document.getElementById("modalBathrooms").innerText = p["kamar mandi"];
+      document.getElementById("modalArea").innerText = p["luas"];
+      document.getElementById("modalStatus").innerText = p["status"];
+      document.getElementById("modalDescription").innerText = p["deskripsi"];
       document.getElementById("propertyModal").style.display = "flex";
     }
+
     function closeModal() {
       document.getElementById("propertyModal").style.display = "none";
     }
