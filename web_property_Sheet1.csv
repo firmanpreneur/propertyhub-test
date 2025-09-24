@@ -1,6 +1,7 @@
 Judul,Lokasi,Harga,Tipe,Kota,Kamar Tidur,Kamar Mandi,Luas,Status,Deskripsi
-Rumah Minimalis,Gowa,350000000,Rumah,3,2,90,Dijual,"Rumah minimalis siap huni dengan desain modern"
-Apartemen City View,Makassar,550000000,Apartemen,2,1,60,Disewakan,"Apartemen dekat pusat kota dengan view bagus"
-Ruko Strategis,Maros,750000000,Ruko,0,1,120,Dijual,"Ruko pinggir jalan utama cocok untuk usaha"
-Tanah Kavling,Takalar,250000000,Tanah,0,0,200,Dijual,"Tanah kavling murah dekat dengan fasilitas umum"
-Villa Mewah,Makassar,2200000000,Rumah,5,4,300,Dijual,"Villa mewah dengan kolam renang pribadi"
+Rumah Minimalis,jln mesjid raya,350000000,Rumah,Gowa,2,3,90,Dijual,Rumah minimalis siap huni dengan desain modern
+Apartemen City View,jln sunu,550000000,Apartemen,Makassar,1,2,60,Disewakan,Apartemen dekat pusat kota dengan view bagus
+Ruko Strategis,jln poros maros,750000000,Ruko,Maros,1,0,120,Dijual,Ruko pinggir jalan utama cocok untuk usaha
+Tanah Kavling,jln macan ,250000000,Tanah,Takalar,0,0,200,Dijual,Tanah kavling murah dekat dengan fasilitas umum
+Villa Mewah,jln sungai limboto,2200000000,Rumah,Makassar,4,5,300,Dijual,Villa mewah dengan kolam renang pribadi
+
