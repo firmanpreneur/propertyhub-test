@@ -63,29 +63,18 @@
   </div>
 
   <script>
-    const csvUrl = "https://script.google.com/macros/s/AKfycbzGbzbZVK5MmVU3b8FMv-WlYumhzOmQDWDSiSzWTzqIKmRsbTKqAQzAR3BqiaqMiMNW/exec";
+    // Ganti dengan URL Web App Apps Script kamu yang return JSON
+    const apiUrl = "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
     let properties = [];
 
-    // Ambil CSV dari Google Apps Script
-    fetch(csvUrl)
-      .then(res => res.text())
-      .then(csv => {
-        const rows = csv.split("\n").map(r => r.split(","));
-        console.log("RAW CSV:", csv);
-        console.log("ROWS:", rows);
-
-        const headers = rows[0].map(h => h.trim().toLowerCase());
-        console.log("HEADERS:", headers);
-
-        properties = rows.slice(1).map(row => {
-          let obj = {};
-          row.forEach((val, i) => obj[headers[i]] = val.trim());
-          return obj;
-        });
-
-        console.log("PROPERTIES:", properties);
+    // Fetch data dari Apps Script
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+        properties = data;
         displayProperties(properties);
-      });
+      })
+      .catch(err => console.error("Gagal load data:", err));
 
     function displayProperties(data) {
       const grid = document.getElementById("propertyGrid");
@@ -94,12 +83,14 @@
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
-          <h3>${p["judul"]}</h3>
-          <p><strong>Lokasi:</strong> ${p["lokasi"]}</p>
-          <p><strong>Harga:</strong> ${p["harga"]}</p>
-          <p><strong>Tipe:</strong> ${p["tipe"]}</p>
-          <button class="btn" onclick='openModal(${JSON.stringify(p)})'>Detail</button>
+          <h3>${p.judul}</h3>
+          <p><strong>Lokasi:</strong> ${p.lokasi}</p>
+          <p><strong>Harga:</strong> ${p.harga}</p>
+          <p><strong>Tipe:</strong> ${p.tipe}</p>
+          <button class="btn">Detail</button>
         `;
+        const btn = card.querySelector("button");
+        btn.addEventListener("click", () => openModal(p));
         grid.appendChild(card);
       });
     }
@@ -114,24 +105,24 @@
       let search = document.getElementById("searchBox").value.toLowerCase();
 
       let filtered = properties.filter(p =>
-        (city === "" || p["kota"]?.toLowerCase() === city) &&
-        (type === "" || p["tipe"]?.toLowerCase() === type) &&
-        (search === "" || p["judul"]?.toLowerCase().includes(search))
+        (city === "" || (p.kota && p.kota.toLowerCase() === city)) &&
+        (type === "" || (p.tipe && p.tipe.toLowerCase() === type)) &&
+        (search === "" || (p.judul && p.judul.toLowerCase().includes(search)))
       );
 
       displayProperties(filtered);
     }
 
     function openModal(p) {
-      document.getElementById("modalTitle").innerText = p["judul"];
-      document.getElementById("modalLocation").innerText = p["lokasi"];
-      document.getElementById("modalPrice").innerText = p["harga"];
-      document.getElementById("modalType").innerText = p["tipe"];
-      document.getElementById("modalBedrooms").innerText = p["kamar tidur"];
-      document.getElementById("modalBathrooms").innerText = p["kamar mandi"];
-      document.getElementById("modalArea").innerText = p["luas"];
-      document.getElementById("modalStatus").innerText = p["status"];
-      document.getElementById("modalDescription").innerText = p["deskripsi"];
+      document.getElementById("modalTitle").innerText = p.judul;
+      document.getElementById("modalLocation").innerText = p.lokasi;
+      document.getElementById("modalPrice").innerText = p.harga;
+      document.getElementById("modalType").innerText = p.tipe;
+      document.getElementById("modalBedrooms").innerText = p["kamar tidur"] || "-";
+      document.getElementById("modalBathrooms").innerText = p["kamar mandi"] || "-";
+      document.getElementById("modalArea").innerText = p.luas || "-";
+      document.getElementById("modalStatus").innerText = p.status || "-";
+      document.getElementById("modalDescription").innerText = p.deskripsi || "-";
       document.getElementById("propertyModal").style.display = "flex";
     }
 
