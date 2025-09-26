@@ -44,9 +44,7 @@
     <input type="text" id="searchBox" placeholder="Cari properti...">
   </div>
 
-  <div class="grid" id="propertyGrid">
-    <!-- Data properti dari CSV akan muncul di sini -->
-  </div>
+  <div class="grid" id="propertyGrid"></div>
 
   <!-- Modal Detail -->
   <div class="modal" id="propertyModal">
@@ -65,25 +63,30 @@
   </div>
 
   <script>
-    // Ganti URL CSV ini dengan link CSV di GitHub kamu
     const csvUrl = "https://script.google.com/macros/s/AKfycbzGbzbZVK5MmVU3b8FMv-WlYumhzOmQDWDSiSzWTzqIKmRsbTKqAQzAR3BqiaqMiMNW/exec";
     let properties = [];
 
-    // Ambil CSV lalu parse
+    // Ambil CSV dari Google Apps Script
     fetch(csvUrl)
       .then(res => res.text())
       .then(csv => {
         const rows = csv.split("\n").map(r => r.split(","));
+        console.log("RAW CSV:", csv);
+        console.log("ROWS:", rows);
+
         const headers = rows[0].map(h => h.trim().toLowerCase());
+        console.log("HEADERS:", headers);
+
         properties = rows.slice(1).map(row => {
           let obj = {};
           row.forEach((val, i) => obj[headers[i]] = val.trim());
           return obj;
         });
+
+        console.log("PROPERTIES:", properties);
         displayProperties(properties);
       });
 
-    // Tampilkan properti ke grid
     function displayProperties(data) {
       const grid = document.getElementById("propertyGrid");
       grid.innerHTML = "";
@@ -101,7 +104,6 @@
       });
     }
 
-    // Filter & search
     document.getElementById("filterCity").addEventListener("change", applyFilters);
     document.getElementById("filterType").addEventListener("change", applyFilters);
     document.getElementById("searchBox").addEventListener("input", applyFilters);
@@ -120,7 +122,6 @@
       displayProperties(filtered);
     }
 
-    // Modal
     function openModal(p) {
       document.getElementById("modalTitle").innerText = p["judul"];
       document.getElementById("modalLocation").innerText = p["lokasi"];
